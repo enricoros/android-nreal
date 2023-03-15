@@ -6,13 +6,64 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+  <!-- centered text -->
   <TextView
-      android:layout_width="wrap_content"
+      android:id="@+id/welcomeTextView"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="Hello World!"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
+      android:paddingVertical="16dp"
+      android:text="@string/title_name"
+      android:textAlignment="center"
+      android:textColor="?attr/colorPrimary"
+      android:textSize="24sp"
+      app:layout_constraintBottom_toTopOf="@+id/statusTextTitle"
       app:layout_constraintTop_toTopOf="parent" />
+
+  <!-- Status view: shows the current status -->
+  <TextView
+      android:id="@+id/statusTextTitle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/colorPrimary"
+      android:padding="16dp"
+      android:text="@string/status_title"
+      android:textColor="?attr/colorOnPrimary"
+      android:textSize="18sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toTopOf="@+id/statusTextContent"
+      app:layout_constraintTop_toBottomOf="@+id/welcomeTextView" />
+
+  <TextView
+      android:id="@+id/statusTextContent"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/colorPrimary"
+      android:minHeight="100dp"
+      android:paddingHorizontal="16dp"
+      android:paddingBottom="16dp"
+      android:textColor="?attr/colorOnPrimary"
+      android:textSize="18sp"
+      app:layout_constraintBottom_toTopOf="@+id/scrollView"
+      app:layout_constraintTop_toBottomOf="@+id/statusTextTitle"
+      tools:text="Status\nwill\nappear\nhere" />
+
+  <!-- Log view: shows the log messages -->
+  <ScrollView
+      android:id="@+id/scrollView"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/statusTextContent">
+
+    <TextView
+        android:id="@+id/logTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textColor="?attr/colorPrimaryVariant"
+        android:textSize="14sp"
+        tools:text="Log messages will appear here." />
+
+  </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
