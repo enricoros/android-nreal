@@ -1,18 +1,19 @@
 # Android-Nreal 🕶️📱
 
 Welcome to the Android-Nreal project! 🎉👋 This open-source Android library is designed to
-communicate with Nreal Air AR glasses (to begin with). Our goal is to provide a convenient and
-efficient solution for developers to create AR experiences on the Nreal platform.
+communicate with Nreal Air AR glasses. Our goal is to provide a convenient,
+efficient, easy to understand, and dependency-free library for developers to create AR
+experiences on the Nreal platform.
 
 ## 🌟 Features
 
 - [x] Auto-detection and hot-plug detection
 - [x] Communication and IMU packet decode
-- [x] Some key press decoding
+- [x] Key press decoding (brightness up/down, power)
 - [ ] Sensor fusion
 - [ ] Rendering
-- [ ] Nreal Light support
-- [ ] Per-eye display
+- [ ] [Nreal Light](https://www.nreal.ai/light/) support
+- [ ] Per-eye display (3D spatial rendering for your Java/OpenGL apps)
 - [ ] Standalone library with demos
 
 We're far from done, and your pull requests would be greatly appreciated! 🤝
