@@ -1,5 +1,6 @@
 package com.enricoros.nreal.driver;
 
+import android.annotation.SuppressLint;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
 import android.util.Log;
@@ -21,6 +22,14 @@ class NrealDeviceThread extends Thread {
   private static final boolean DEBUG_10HZ = false;
   private static final boolean DEBUG_OTHER_COMMANDS = false;
 
+  // constants from
+  private static final float TICK_SCALE_S = 1f / 1E9f;
+  private static final float GYRO_SCALE_DPS = 2000f / 8388608f; // based on 24bit signed int w/ FSR = +/-2000 dps, datasheet option
+  private static final float ACCEL_SCALE_G = 16f / 8388608f;    // based on 24bit signed int w/ FSR = +/-16 g, datasheet option
+  private static final float MAG_SCALE_UT = 4912f / 32768f;     // based on 16bit signed int w/ FSR = +/-4912 uT, gpt option
+  private static final float MAG_OFFSET = 32768f;
+
+
   private final UsbDeviceConnection connection;
   private final UsbEndpoint imuIn;
   private final UsbEndpoint imuOut;
@@ -31,6 +40,10 @@ class NrealDeviceThread extends Thread {
   private final ImuDataRaw imuDataRaw = new ImuDataRaw();
 
   private boolean mQuit = false;
+
+  private long lastUptimeNs;
+  private long magMinX, magMinY, magMinZ;
+  private long magMaxX, magMaxY, magMaxZ;
 
   public static final int BUTTON_POWER = 1;
   public static final int BUTTON_BRIGHTNESS_UP = 2;
@@ -73,6 +86,10 @@ class NrealDeviceThread extends Thread {
       return;
     }
 
+    lastUptimeNs = 0;
+    magMaxX = 0;
+    magMinX = 0;
+
     // Infinite read until we request to quit or the device is disconnected (mDeviceConnection can be nullified, not the local copy)
     while (!mQuit /*&& mDeviceConnection != null*/) {
 
@@ -94,6 +111,7 @@ class NrealDeviceThread extends Thread {
     Log.e(TAG, "Reader thread finished");
   }
 
+  @SuppressLint("DefaultLocale")
   private void processIMUData() {
     // validity checks
     if (imuData[0] != 1 || imuData[1] != 2 || imuData[12] != (byte) 0xA0 || imuData[13] != 0x0F || imuData[27] != 0x20 || imuData[42] != 0x00) {
@@ -123,10 +141,33 @@ class NrealDeviceThread extends Thread {
     if (imuData[58] != 0 || imuData[59] != 0 || imuData[60] != 0 || imuData[61] != 0 || (imuData[62] != 0 && imuData[62] != 1) || imuData[63] != 0)
       printHex(imuData, 58, 6, "Unexpected IMU data (2): ");
 
-    // NOTE: INCOMPLETE - CONTINUE FROM HERE
-
     // call the callback
     imuDataRaw.update(accelX, accelY, accelZ, angVelX, angVelY, angVelZ, magX, magY, magZ, uptimeNs);
+
+    // DATA PROCESSING
+
+    // Integrate information, if we have a previous time
+    if (lastUptimeNs < 1) {
+      lastUptimeNs = uptimeNs;
+      return;
+    }
+    float dT = (uptimeNs - lastUptimeNs) * TICK_SCALE_S;
+    lastUptimeNs = uptimeNs;
+
+    // Normalize the data for the 3DoF
+    float dRoll = (float) (angVelX) * GYRO_SCALE_DPS;
+    float dPitch = (float) (angVelY) * GYRO_SCALE_DPS;
+    float dYaw = (float) (angVelZ) * GYRO_SCALE_DPS;
+    float aX = (float) (accelX) * ACCEL_SCALE_G;
+    float aY = (float) (accelY) * ACCEL_SCALE_G;
+    float aZ = (float) (accelZ) * ACCEL_SCALE_G;
+    float mX = (float) (magX - MAG_OFFSET) * MAG_SCALE_UT;
+    float mY = (float) (magY - MAG_OFFSET) * MAG_SCALE_UT;
+    float mZ = (float) (magZ - MAG_OFFSET) * MAG_SCALE_UT;
+
+    // convert dRoll to string with 2 decimal places
+    imuDataRaw.update(String.format("\n\nGyro (dps):  %+,.1f  %+,.1f  %+,.1f\n\nAcc    (G):  %+,.1f  %+,.1f  %+,.1f\n\nMag   (uT):  %+,1.0f  %+,1.0f  %+,1.0f\n\ndT (ms):  %3.0f",
+        dRoll, dPitch, dYaw, aX, aY, aZ, mX, mY, mZ, dT * 1000));
     threadCallbacks.onNewData(imuDataRaw);
   }
 

@@ -10,6 +10,7 @@ public class ImuDataRaw {
   int angVelX, angVelY, angVelZ;
   int magX, magY, magZ;
   long uptimeNs;
+  String _tmpOther;
 
   void update(int accelX, int accelY, int accelZ, int angVelX, int angVelY, int angVelZ, int magX, int magY, int magZ, long uptimeNs) {
     this.accelX = accelX;
@@ -24,6 +25,10 @@ public class ImuDataRaw {
     this.uptimeNs = uptimeNs;
   }
 
+  void update(String other) {
+    this._tmpOther = other;
+  }
+
   public ImuDataRaw() {
     this.accelX = 0;
     this.accelY = 0;
@@ -35,6 +40,7 @@ public class ImuDataRaw {
     this.magY = 0;
     this.magZ = 0;
     this.uptimeNs = 0;
+    this._tmpOther = null;
   }
 
   // copy constructor - used for now to send between threads
@@ -49,6 +55,7 @@ public class ImuDataRaw {
     this.magY = other.magY;
     this.magZ = other.magZ;
     this.uptimeNs = other.uptimeNs;
+    this._tmpOther = other._tmpOther;
   }
 
   // string every vector
@@ -56,8 +63,8 @@ public class ImuDataRaw {
   @NonNull
   @SuppressLint("DefaultLocale")
   public String toString() {
-    return String.format(" - accel:  %d %d %d\n - angVel: %d %d %d\n - mag: %d %d %d\n - uptime: %d (s)",
-        accelX, accelY, accelZ, angVelX, angVelY, angVelZ, magX, magY, magZ, (long) (uptimeNs / 1e9));
+    return String.format(" - accel:  %d %d %d\n - angVel: %d %d %d\n - mag: %d %d %d\n - uptime: %d (s)\n - other: %s",
+        accelX, accelY, accelZ, angVelX, angVelY, angVelZ, magX, magY, magZ, (long) (uptimeNs / 1e9), _tmpOther != null ? _tmpOther : "n/a");
   }
 
 }

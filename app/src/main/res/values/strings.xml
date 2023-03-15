@@ -2,6 +2,6 @@
   <string name="app_name">Android Nreal Library</string>
 
   <string name="title_name">Nreal Test Application</string>
-  <string name="status_title">Status:</string>
+  <string name="status_title"># Status</string>
 
 </resources>

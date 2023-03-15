@@ -25,7 +25,7 @@ provides easy-to-use 3DoF coordinates for viewport rendering. In the future, we 
 dual-eye rendering, 6DoF, and camera/microphone input. If this project pushes Nreal to broaden
 the SDK to the Android platform, that would also be a huge win for the community!
 
-<img src="docs/screenshot_test_app.png" alt="Screenshot" width="400" />
+<img src="docs/screenshot_test_app_hrv.png" alt="Screenshot" width="400" />
 
 ## 🚀 How to Build and Run
 
