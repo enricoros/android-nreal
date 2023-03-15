@@ -49,6 +49,8 @@ public class NrealManager {
     void onConnectionError(String error);
 
     void onNewDataTemp(ImuDataRaw imuDataRawCopy);
+
+    void onButtonPressedTemp(int buttonId, int relatedValue);
   }
 
 
@@ -188,6 +190,11 @@ public class NrealManager {
     public void onNewData(ImuDataRaw data) {
       ImuDataRaw dataCopy = new ImuDataRaw(data);
       uiHandler.post(() -> listener.onNewDataTemp(dataCopy));
+    }
+
+    @Override
+    public void onButtonPressedTemp(int button, int value) {
+      uiHandler.post(() -> listener.onButtonPressedTemp(button, value));
     }
   };
 

@@ -32,11 +32,16 @@ class NrealDeviceThread extends Thread {
 
   private boolean mQuit = false;
 
+  public static final int BUTTON_POWER = 1;
+  public static final int BUTTON_BRIGHTNESS_UP = 2;
+  public static final int BUTTON_BRIGHTNESS_DOWN = 3;
 
   public interface ThreadCallbacks {
     void onConnectionError(String s);
 
     void onNewData(ImuDataRaw data);
+
+    void onButtonPressedTemp(int button, int value);
   }
 
 
@@ -133,18 +138,20 @@ class NrealDeviceThread extends Thread {
     if (btnIndex == 1) {
       // Power button press
       if (btnValue == 1) {
-        Log.e(TAG, "Screen on");
+        // Clicked power - screen is ON
+        threadCallbacks.onButtonPressedTemp(BUTTON_POWER, 1);
       } else if (btnValue == 0) {
-        Log.e(TAG, "Screen Off");
+        // Clicked power - screen is OFF
+        threadCallbacks.onButtonPressedTemp(BUTTON_POWER, 0);
       } else
         Log.e(TAG, "Unknown screen state: " + btnValue);
     } else if (btnIndex == 2) {
       // Brightness up press
-      Log.e(TAG, "Brightness up, to: " + btnValue);
+      threadCallbacks.onButtonPressedTemp(BUTTON_BRIGHTNESS_UP, btnValue);
       //mBrightness = btnValue;
     } else if (btnIndex == 3) {
       // Brightness down press
-      Log.e(TAG, "Brightness down, to: " + btnValue);
+      threadCallbacks.onButtonPressedTemp(BUTTON_BRIGHTNESS_DOWN, btnValue);
       //mBrightness = btnValue;
     } else if (DEBUG_OTHER_COMMANDS)
       Log.e(TAG, "Read Other bytes: 22: " + btnIndex + ", 15: " + otherData[15] + ", 30: " + otherData[30] + ", 23: " + otherData[23] + " - " + Arrays.toString(otherData));

@@ -83,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
       mImuDataRaw = imuDataRawCopy;
       updateStatus();
     }
+
+    @Override
+    public void onButtonPressedTemp(int buttonId, int relatedValue) {
+      appendLog("onButtonPressedTemp: btn=" + buttonId + ", relatedValue=" + relatedValue);
+    }
   };
 
 
@@ -102,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
   private void updateStatus() {
     if (nrealManager != null)
       binding.statusTextContent.setText("" +
-          (nrealManager.isDeviceConnected() ? "Connected" : "Disconnected") + " - " +
-          (nrealManager.isDeviceStreaming() ? "Streaming" : "NOT streaming") + "\n" +
+          (nrealManager.isDeviceConnected() ? "Connected" : "Disconnected") + ", " +
+          (nrealManager.isDeviceStreaming() ? "and Streaming" : "NOT streaming") + "\n" +
           (mImuDataRaw == null ? "No IMU data" : mImuDataRaw.toString())
       );
   }
