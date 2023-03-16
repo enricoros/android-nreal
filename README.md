@@ -11,6 +11,8 @@ experiences on the Nreal platform.
 - [x] Communication and IMU packet decode
 - [x] Key press decoding (brightness up/down, power)
 - [ ] Sensor fusion
+  - [x] Magnetometer calibration
+  - [ ] Good AHRS algorithm
 - [ ] Rendering
 - [ ] [Nreal Light](https://www.nreal.ai/light/) support
 - [ ] Per-eye display (3D spatial rendering for your Java/OpenGL apps)
@@ -25,7 +27,7 @@ provides easy-to-use 3DoF coordinates for viewport rendering. In the future, we 
 dual-eye rendering, 6DoF, and camera/microphone input. If this project pushes Nreal to broaden
 the SDK to the Android platform, that would also be a huge win for the community!
 
-<img src="docs/screenshot_test_app_hrv.png" alt="Screenshot" width="400" />
+<img src="docs/screenshot_test_app_landscape_vector.png" alt="Screenshot" width="800" />
 
 ## 🚀 How to Build and Run
 
