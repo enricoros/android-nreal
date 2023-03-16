@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
@@ -15,6 +16,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.util.Pair;
+
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,7 @@ public class NrealManager {
   private final Context context;
   private final Listener listener;
   private final UsbManager usbManager;
+  private final SharedPreferences preferences;
 
   private UsbDeviceConnection mDeviceConnection;
   private NrealDeviceThread mThread;
@@ -48,6 +52,8 @@ public class NrealManager {
 
     void onConnectionError(String error);
 
+    void onMessage(String message);
+
     void onNewDataTemp(ImuDataRaw imuDataRawCopy);
 
     void onButtonPressedTemp(int buttonId, int relatedValue);
@@ -58,6 +64,7 @@ public class NrealManager {
     context = applicationContext;
     listener = nrealListener;
     usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+    preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
     // Note: moved registration here to be sure we will not double-register this receiver
     BroadcastReceiver mUsbPermissionReceiver = new BroadcastReceiver() {
@@ -174,6 +181,8 @@ public class NrealManager {
       return;
     }
     mThread = new NrealDeviceThread(mDeviceConnection, imuEndpoints, otherEndpoints, mReaderCallbacks);
+    if (mThread.restoreState(preferences))
+      listener.onMessage("Restored Calibration");
     mThread.start();
   }
 
@@ -201,6 +210,7 @@ public class NrealManager {
   private void stopNrealCommunication() {
     if (mThread != null) {
       mThread.quit();
+      mThread.saveState(preferences);
       mThread = null;
     }
   }

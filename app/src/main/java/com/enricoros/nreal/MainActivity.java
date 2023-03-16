@@ -79,6 +79,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onMessage(String message) {
+      appendLog("onMessage: " + message);
+    }
+
+    @Override
     public void onNewDataTemp(ImuDataRaw imuDataRawCopy) {
       mImuDataRaw = imuDataRawCopy;
       binding.vectorDisplayView.updateAcceleration(mImuDataRaw.getAcceleration());

@@ -1,6 +1,7 @@
 package com.enricoros.nreal.driver;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
 import android.util.Log;
@@ -73,6 +74,27 @@ class NrealDeviceThread extends Thread {
     }
   }
 
+
+  public void saveState(SharedPreferences preferences) {
+    int[] calibration = magnetometerPreprocessor.saveCalibration();
+    if (calibration != null)
+      preferences.edit().putString("magnetometer_calibration", Arrays.toString(calibration)).apply();
+  }
+
+  public boolean restoreState(SharedPreferences preferences) {
+    String calibration = preferences.getString("magnetometer_calibration", null);
+    if (calibration != null) {
+      String[] split = calibration.substring(1, calibration.length() - 1).split(", ");
+      int[] ints = new int[split.length];
+      for (int i = 0; i < split.length; i++)
+        ints[i] = Integer.parseInt(split[i]);
+      magnetometerPreprocessor.restoreCalibration(ints);
+      return true;
+    }
+    return false;
+  }
+
+
   @Override
   public void run() {
     if (!t_startImu()) {
@@ -106,6 +128,7 @@ class NrealDeviceThread extends Thread {
     }
     Log.e(TAG, "Reader thread finished");
   }
+
 
   @SuppressLint("DefaultLocale")
   private void processIMUData() {
