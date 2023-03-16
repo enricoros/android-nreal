@@ -6,6 +6,8 @@ import android.hardware.usb.UsbEndpoint;
 import android.util.Log;
 import android.util.Pair;
 
+import com.enricoros.nreal.driver.data.MagnetometerPreprocessor;
+
 import java.util.Arrays;
 
 /**
@@ -22,13 +24,10 @@ class NrealDeviceThread extends Thread {
   private static final boolean DEBUG_10HZ = false;
   private static final boolean DEBUG_OTHER_COMMANDS = false;
 
-  // constants from
+  // constants from the datasheets
   private static final float TICK_SCALE_S = 1f / 1E9f;
   private static final float GYRO_SCALE_DPS = 2000f / 8388608f; // based on 24bit signed int w/ FSR = +/-2000 dps, datasheet option
   private static final float ACCEL_SCALE_G = 16f / 8388608f;    // based on 24bit signed int w/ FSR = +/-16 g, datasheet option
-  private static final float MAG_SCALE_UT = 4912f / 32768f;     // based on 16bit signed int w/ FSR = +/-4912 uT, gpt option
-  private static final float MAG_OFFSET = 32768f;
-
 
   private final UsbDeviceConnection connection;
   private final UsbEndpoint imuIn;
@@ -38,12 +37,11 @@ class NrealDeviceThread extends Thread {
   private final byte[] imuData = new byte[64];
   private final byte[] otherData = new byte[64];
   private final ImuDataRaw imuDataRaw = new ImuDataRaw();
+  private final MagnetometerPreprocessor magnetometerPreprocessor = new MagnetometerPreprocessor(100.f, 200);
 
   private boolean mQuit = false;
 
   private long lastUptimeNs;
-  private long magMinX, magMinY, magMinZ;
-  private long magMaxX, magMaxY, magMaxZ;
 
   public static final int BUTTON_POWER = 1;
   public static final int BUTTON_BRIGHTNESS_UP = 2;
@@ -87,8 +85,6 @@ class NrealDeviceThread extends Thread {
     }
 
     lastUptimeNs = 0;
-    magMaxX = 0;
-    magMinX = 0;
 
     // Infinite read until we request to quit or the device is disconnected (mDeviceConnection can be nullified, not the local copy)
     while (!mQuit /*&& mDeviceConnection != null*/) {
@@ -161,13 +157,11 @@ class NrealDeviceThread extends Thread {
     float aX = (float) (accelX) * ACCEL_SCALE_G;
     float aY = (float) (accelY) * ACCEL_SCALE_G;
     float aZ = (float) (accelZ) * ACCEL_SCALE_G;
-    float mX = (float) (magX - MAG_OFFSET) * MAG_SCALE_UT;
-    float mY = (float) (magY - MAG_OFFSET) * MAG_SCALE_UT;
-    float mZ = (float) (magZ - MAG_OFFSET) * MAG_SCALE_UT;
+    float[] mag = magnetometerPreprocessor.process(new int[]{magX, magY, magZ}, dT);
 
     // convert dRoll to string with 2 decimal places
-    imuDataRaw.update(String.format("\n\nGyro (dps):  %+,.1f  %+,.1f  %+,.1f\n\nAcc    (G):  %+,.1f  %+,.1f  %+,.1f\n\nMag   (uT):  %+,1.0f  %+,1.0f  %+,1.0f\n\ndT (ms):  %3.0f",
-        dRoll, dPitch, dYaw, aX, aY, aZ, mX, mY, mZ, dT * 1000));
+    imuDataRaw.update(String.format("\n\nGyro (dps):  %+,.1f  %+,.1f  %+,.1f\n\nAcc    (G):  %+,.1f  %+,.1f  %+,.1f\n\nMag   (uT):  %.3f  %.3f  %.3f\n\ndT (ms):  %3.0f",
+        dRoll, dPitch, dYaw, aX, aY, aZ, mag[0], mag[1], mag[2], dT * 1000));
     threadCallbacks.onNewData(imuDataRaw);
   }
 
