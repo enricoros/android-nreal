@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+  <!-- centered text -->
+  <TextView
+      android:id="@+id/welcomeTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingVertical="16dp"
+      android:text="@string/title_name"
+      android:textAlignment="center"
+      android:textColor="?attr/colorPrimary"
+      android:textSize="24sp"
+      app:layout_constraintBottom_toTopOf="@+id/statusTextTitle"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+      android:id="@+id/statusTextTitle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="?attr/colorPrimaryVariant"
+      android:padding="16dp"
+      android:text="@string/status_title"
+      android:textColor="?attr/colorOnPrimary"
+      android:textSize="18sp"
+      android:textStyle="bold"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toLeftOf="@id/scrollView"
+      app:layout_constraintTop_toBottomOf="@+id/welcomeTextView" />
+
+  <!-- Status view: shows the current status -->
+  <TextView
+      android:id="@+id/statusTextContent"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:background="?attr/colorPrimaryVariant"
+      android:fontFamily="monospace"
+      android:minHeight="300dp"
+      android:paddingHorizontal="16dp"
+      android:paddingBottom="16dp"
+      android:textColor="?attr/colorOnPrimary"
+      android:textSize="16sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="@id/statusTextTitle"
+      app:layout_constraintTop_toBottomOf="@+id/statusTextTitle"
+      tools:text="Status\nwill\nappear\nhere" />
+
+  <!-- Log view: shows the log messages -->
+  <ScrollView
+      android:id="@+id/scrollView"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toRightOf="@id/statusTextTitle"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/welcomeTextView">
+
+    <TextView
+        android:id="@+id/logTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textColor="?attr/colorPrimaryVariant"
+        android:textSize="14sp"
+        tools:text="Log messages will appear here." />
+
+  </ScrollView>
+
+  <!-- Shows Vector(s) -->
+  <com.enricoros.nreal.VectorDisplayView
+      android:id="@+id/vectorDisplayView"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+
+      app:layout_constraintBottom_toBottomOf="@id/scrollView"
+      app:layout_constraintEnd_toEndOf="@id/scrollView"
+      app:layout_constraintStart_toStartOf="@id/scrollView"
+      app:layout_constraintTop_toTopOf="@id/scrollView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -183,7 +183,7 @@ class NrealDeviceThread extends Thread {
     float[] mag = magnetometerPreprocessor.process(new int[]{magX, magY, magZ}, dT);
 
     // convert dRoll to string with 2 decimal places
-    imuDataRaw.update(String.format("\n\nGyro (dps):  %+,.1f  %+,.1f  %+,.1f\n\nAcc    (G):  %+,.1f  %+,.1f  %+,.1f\n\nMag   (uT):  %.3f  %.3f  %.3f\n\ndT (ms):  %3.0f",
+    imuDataRaw.update(String.format("\n\nGyro (dps):  %+,.1f  %+,.1f  %+,.1f\n\nAcc    (G):  %+,.1f  %+,.1f  %+,.1f\n\nMag (norm):  %.3f  %.3f  %.3f\n\ndT (ms):  %3.0f",
         dRoll, dPitch, dYaw, aX, aY, aZ, mag[0], mag[1], mag[2], dT * 1000));
     threadCallbacks.onNewData(imuDataRaw);
   }

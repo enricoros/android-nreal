@@ -27,11 +27,11 @@ public class VectorDisplayView extends View {
 
   private void init() {
     mPaintVector = new Paint(Paint.ANTI_ALIAS_FLAG);
-    mPaintVector.setColor(Color.WHITE);
+    mPaintVector.setColor(getResources().getColor(R.color.teal_200, getContext().getTheme()));
     mPaintVector.setStrokeWidth(8);
 
     mPaintDot = new Paint(Paint.ANTI_ALIAS_FLAG);
-    mPaintDot.setColor(Color.RED);
+    mPaintDot.setColor(getResources().getColor(R.color.purple_200, getContext().getTheme()));
   }
 
   public void updateAcceleration(float[] acceleration) {

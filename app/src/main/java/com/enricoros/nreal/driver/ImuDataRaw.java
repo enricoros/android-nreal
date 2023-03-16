@@ -63,7 +63,7 @@ public class ImuDataRaw {
   @NonNull
   @SuppressLint("DefaultLocale")
   public String toString() {
-    return String.format(" - accel:  %d %d %d\n - angVel: %d %d %d\n - mag: %d %d %d\n - uptime: %d (s)\n - other: %s",
+    return String.format(" - accel:  %d %d %d\n - angVel: %d %d %d\n - mag: %d %d %d\n - uptime: %d (s)%s",
         accelX, accelY, accelZ, angVelX, angVelY, angVelZ, magX, magY, magZ, (long) (uptimeNs / 1e9), _tmpOther != null ? _tmpOther : "n/a");
   }
 
