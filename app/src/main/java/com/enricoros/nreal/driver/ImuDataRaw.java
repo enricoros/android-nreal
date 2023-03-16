@@ -67,4 +67,7 @@ public class ImuDataRaw {
         accelX, accelY, accelZ, angVelX, angVelY, angVelZ, magX, magY, magZ, (long) (uptimeNs / 1e9), _tmpOther != null ? _tmpOther : "n/a");
   }
 
+  public float[] getAcceleration() {
+    return new float[]{(float) accelX, (float) accelY, (float) accelZ};
+  }
 }

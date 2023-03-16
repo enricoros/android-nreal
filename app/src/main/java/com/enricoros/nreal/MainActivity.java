@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onNewDataTemp(ImuDataRaw imuDataRawCopy) {
       mImuDataRaw = imuDataRawCopy;
+      binding.vectorDisplayView.updateAcceleration(mImuDataRaw.getAcceleration());
       updateStatus();
     }
 

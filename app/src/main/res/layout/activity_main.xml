@@ -24,30 +24,43 @@
       android:id="@+id/statusTextTitle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="?attr/colorPrimary"
+      android:background="?attr/colorPrimaryVariant"
       android:padding="16dp"
       android:text="@string/status_title"
       android:textColor="?attr/colorOnPrimary"
       android:textSize="18sp"
       android:textStyle="bold"
-      app:layout_constraintBottom_toTopOf="@+id/statusTextContent"
+      app:layout_constraintBottom_toTopOf="@+id/purpleFrame"
       app:layout_constraintTop_toBottomOf="@+id/welcomeTextView" />
 
-  <TextView
-      android:id="@+id/statusTextContent"
+  <FrameLayout
+      android:id="@+id/purpleFrame"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="?attr/colorPrimary"
-      android:fontFamily="monospace"
-      android:minHeight="300dp"
-      android:paddingHorizontal="16dp"
-      android:paddingBottom="16dp"
-      android:textColor="?attr/colorOnPrimary"
-      android:textSize="16sp"
-      android:textStyle="bold"
+      android:layout_height="0dp"
+      android:background="?attr/colorPrimaryVariant"
       app:layout_constraintBottom_toTopOf="@+id/scrollView"
       app:layout_constraintTop_toBottomOf="@+id/statusTextTitle"
-      tools:text="Status\nwill\nappear\nhere" />
+      tools:text="Status\nwill\nappear\nhere">
+
+    <TextView
+        android:id="@+id/statusTextContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.8"
+        android:fontFamily="monospace"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="16dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Status\nwill\nappear\nhere" />
+
+    <com.enricoros.nreal.VectorDisplayView
+        android:id="@+id/vectorDisplayView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+  </FrameLayout>
 
   <!-- Log view: shows the log messages -->
   <ScrollView
@@ -55,7 +68,7 @@
       android:layout_width="match_parent"
       android:layout_height="0dp"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/statusTextContent">
+      app:layout_constraintTop_toBottomOf="@+id/purpleFrame">
 
     <TextView
         android:id="@+id/logTextView"
