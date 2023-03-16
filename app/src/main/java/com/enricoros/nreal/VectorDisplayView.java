@@ -74,7 +74,7 @@ public class VectorDisplayView extends View {
     canvas.drawLine(startX, startY, endX, endY, mPaintVector);
 
     // Draw the dot at the tip of the vector
-    float baseDotRadius = 10.0f;
+    float baseDotRadius = 20.0f;
     float dotRadius = baseDotRadius * scale;
     canvas.drawCircle(endX, endY, dotRadius, mPaintDot);
   }
